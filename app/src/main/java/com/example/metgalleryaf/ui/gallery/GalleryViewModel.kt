@@ -1,4 +1,6 @@
 package com.example.metgalleryaf.ui.gallery
 
-class GalleryViewModel {
+import androidx.lifecycle.ViewModel
+
+class GalleryViewModel: ViewModel() {
 }
