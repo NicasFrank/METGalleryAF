@@ -1,35 +1,48 @@
 package com.example.metgalleryaf.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
+import com.example.metgalleryaf.ui.item.ItemScreen
 
-object MetGalleryDestinations{
-    const val GALLERY_ROUTE = "gallery"
-    const val ITEM_ROUTE = "item"
+interface MetGalleryDestinations{
+    val route: String
+}
+
+object Gallery: MetGalleryDestinations{
+    override val route = "gallery"
+}
+
+object Item: MetGalleryDestinations{
+    override val route = "item"
 }
 
 @Composable
 fun MetGalleryNavHost(
-    navController: NavHostController,
-    modifier: Modifier
+    navController: NavHostController
 ){
     NavHost(
         navController = navController,
-        startDestination = MetGalleryDestinations.GALLERY_ROUTE,
-        modifier = modifier
+        startDestination = Gallery.route
     ){
-        composable(route = MetGalleryDestinations.GALLERY_ROUTE){
+        composable(route = Gallery.route){
             GalleryScreen(){
-                navController.navigate(MetGalleryDestinations.ITEM_ROUTE){
-                    launchSingleTop = true
-                }
+                navController.navigateSingleTopTo(Item.route)
             }
         }
-        composable(route = MetGalleryDestinations.ITEM_ROUTE){
+        composable(route = Item.route){
+            ItemScreen {
+
+            }
         }
     }
 }
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) {
+        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id)
+        launchSingleTop = true
+    }
