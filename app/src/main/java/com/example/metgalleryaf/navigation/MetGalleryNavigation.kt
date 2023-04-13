@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.metgalleryaf.ui.gallery.GalleryScreen
 
 object MetGalleryDestinations{
     const val GALLERY_ROUTE = "gallery"
@@ -22,10 +23,13 @@ fun MetGalleryNavHost(
         modifier = modifier
     ){
         composable(route = MetGalleryDestinations.GALLERY_ROUTE){
-
+            GalleryScreen(){
+                navController.navigate(MetGalleryDestinations.ITEM_ROUTE){
+                    launchSingleTop = true
+                }
+            }
         }
         composable(route = MetGalleryDestinations.ITEM_ROUTE){
-
         }
     }
 }
