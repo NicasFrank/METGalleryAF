@@ -1,4 +1,4 @@
-package com.example.metgalleryaf
+package com.example.metgalleryaf.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
