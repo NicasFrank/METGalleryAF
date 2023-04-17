@@ -8,14 +8,14 @@ import com.example.metgalleryaf.model.Item
 @Entity
 data class DatabaseItem constructor(
     @PrimaryKey
-    val objectID: Int,
+    val objectId: Int,
     val title: String
 )
 
 fun List<DatabaseItem>.asDomainModel(): List<Item>{
     return map {
         Item(
-            objectID = it.objectID,
+            objectID = it.objectId,
             title = it.title
         )
     }
@@ -30,7 +30,7 @@ interface ItemDao{
     suspend fun insertItem(item: DatabaseItem)
 }
 
-@Database(entities = [DatabaseItem::class], version = 1)
+@Database(entities = [DatabaseItem::class], version = 2)
 abstract class GalleryRoomDB: RoomDatabase() {
     abstract val itemDao: ItemDao
 }
@@ -44,7 +44,8 @@ fun getDatabase(context: Context): GalleryRoomDB{
                 context.applicationContext,
                 GalleryRoomDB::class.java,
                 "item_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                .build()
         }
     }
     return INSTANCE
