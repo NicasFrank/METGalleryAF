@@ -1,11 +1,14 @@
 package com.example.metgalleryaf.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.metgalleryaf.data.AppContainer
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
+import com.example.metgalleryaf.ui.gallery.GalleryViewModel
 import com.example.metgalleryaf.ui.item.ItemScreen
 
 interface MetGalleryDestinations{
@@ -22,6 +25,7 @@ object ItemDestination: MetGalleryDestinations{
 
 @Composable
 fun MetGalleryNavHost(
+    appContainer: AppContainer,
     navController: NavHostController
 ){
     NavHost(
@@ -29,9 +33,13 @@ fun MetGalleryNavHost(
         startDestination = GalleryDestination.route
     ){
         composable(route = GalleryDestination.route){
-            GalleryScreen(){
-                navController.navigateSingleTopTo(ItemDestination.route)
-            }
+            val galleryViewModel: GalleryViewModel = viewModel(
+                factory = GalleryViewModel.provideFactory(appContainer.galleryRepository)
+            )
+            GalleryScreen(
+                galleryViewModel
+            )
+            { navController.navigateSingleTopTo(ItemDestination.route) }
         }
         composable(route = ItemDestination.route){
             ItemScreen {

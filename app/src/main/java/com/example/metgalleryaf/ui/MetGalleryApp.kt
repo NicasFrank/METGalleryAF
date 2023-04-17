@@ -13,7 +13,7 @@ fun MetGalleryApp(appContainer: AppContainer) {
     METGalleryAFTheme {
         val navController = rememberNavController()
         Scaffold() {
-            MetGalleryNavHost(navController = navController)
+            MetGalleryNavHost(appContainer = appContainer, navController = navController)
         }
     }
 

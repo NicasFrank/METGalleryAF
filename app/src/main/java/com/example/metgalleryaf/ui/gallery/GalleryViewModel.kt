@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.metgalleryaf.data.GalleryRepository
 import com.example.metgalleryaf.model.Item
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class GalleryUiSate(
+data class GalleryUiState(
     val query: String,
     val matchingItems: List<Item>,
     val isLoading: Boolean = false
@@ -20,13 +24,13 @@ private data class GalleryViewModelState(
     val isLoading: Boolean = false
 ){
 
-    fun toUiState() {
-        GalleryUiSate(
+    fun toUiState(): GalleryUiState =
+        GalleryUiState(
             query = query ?: "",
             matchingItems = matchingItems ?: listOf(),
             isLoading = isLoading
         )
-    }
+
 
 }
 
@@ -60,6 +64,12 @@ class GalleryViewModel(
             }
         }
 
+    }
+
+    fun onSearchInputChanged(query: String){
+        viewModelState.update {
+            it.copy(query = query)
+        }
     }
 
     companion object{
