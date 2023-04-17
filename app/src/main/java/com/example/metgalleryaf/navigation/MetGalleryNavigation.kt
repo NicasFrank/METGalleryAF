@@ -12,11 +12,11 @@ interface MetGalleryDestinations{
     val route: String
 }
 
-object Gallery: MetGalleryDestinations{
+object GalleryDestination: MetGalleryDestinations{
     override val route = "gallery"
 }
 
-object Item: MetGalleryDestinations{
+object ItemDestination: MetGalleryDestinations{
     override val route = "item"
 }
 
@@ -26,14 +26,14 @@ fun MetGalleryNavHost(
 ){
     NavHost(
         navController = navController,
-        startDestination = Gallery.route
+        startDestination = GalleryDestination.route
     ){
-        composable(route = Gallery.route){
+        composable(route = GalleryDestination.route){
             GalleryScreen(){
-                navController.navigateSingleTopTo(Item.route)
+                navController.navigateSingleTopTo(ItemDestination.route)
             }
         }
-        composable(route = Item.route){
+        composable(route = ItemDestination.route){
             ItemScreen {
 
             }
