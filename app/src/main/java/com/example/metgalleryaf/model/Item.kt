@@ -2,8 +2,8 @@ package com.example.metgalleryaf.model
 
 data class Item(
     val objectID: Int,
-    /*val title: String,
-    val classification: String,
+    val title: String
+    /*val classification: String,
     val artist: String,
     val objectDate: String,
     val primaryImg: String,
