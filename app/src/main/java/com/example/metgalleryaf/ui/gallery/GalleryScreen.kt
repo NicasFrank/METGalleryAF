@@ -116,9 +116,9 @@ fun ItemElement(
                 is AsyncImagePainter.State.Loading ->
                     CircularProgressIndicator()
                 is AsyncImagePainter.State.Error ->
-                    Icons.Default.Warning
+                    Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
                 is AsyncImagePainter.State.Empty ->
-                    Icons.Default.Warning
+                    Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
                 is AsyncImagePainter.State.Success ->
                     SubcomposeAsyncImageContent()
             }
