@@ -3,7 +3,11 @@ package com.example.metgalleryaf.data
 import com.example.metgalleryaf.data.database.GalleryRoomDB
 import com.example.metgalleryaf.data.network.MetNetwork
 import com.example.metgalleryaf.data.network.asDatabaseModel
+import com.example.metgalleryaf.data.network.asDomainModel
 import com.example.metgalleryaf.model.Item
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class GalleryRepository(private val database: GalleryRoomDB) {
 
@@ -15,18 +19,28 @@ class GalleryRepository(private val database: GalleryRoomDB) {
         }
     }
 
-    suspend fun findItems(query: String?): Result<List<Item>>{
-        saveHighlights()
-        /*return withContext(Dispatchers.IO){
-            val items = database.itemDao.getItems().asDomainModel().filter { it.objectID.toString() == query }
+    suspend fun findItems(query: String): Result<List<Item>>{
+        return withContext(Dispatchers.IO){
+            val itemIds = MetNetwork.metGallery.searchForQuery(query)
+            val items = mutableListOf<Item>()
+            var idTest = 0;
+            for(id in itemIds.objectIDs){
+                idTest = id
+                try {
+                    items.add(MetNetwork.metGallery.getItem(id).asDomainModel())
+                }
+                catch (e: HttpException){
+                    println(idTest)
+                    continue
+                }
+            }
             if(items.isEmpty()){
                 Result.failure(IllegalAccessException("No items found"))
             }
             else{
                 Result.success(items)
             }
-        }*/
-        return Result.failure(IllegalAccessException("No items found"))
+        }
     }
 
 }

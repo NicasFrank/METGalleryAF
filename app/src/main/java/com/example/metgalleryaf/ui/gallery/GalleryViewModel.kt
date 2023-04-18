@@ -31,7 +31,6 @@ private data class GalleryViewModelState(
             isLoading = isLoading
         )
 
-
 }
 
 

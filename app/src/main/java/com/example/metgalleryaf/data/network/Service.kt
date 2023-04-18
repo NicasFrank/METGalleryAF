@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface MetService{
     @GET("search?q=&isHighlight=true")
-    suspend fun getHighlightIds(): HighlightIdList
+    suspend fun getHighlightIds(): ItemIdList
 
     @GET("search")
     suspend fun searchForQuery(@Query("q") query: String): ItemIdList
@@ -25,6 +25,6 @@ object MetNetwork{
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
-    val metGallery = retrofit.create(MetService::class.java)
+    val metGallery: MetService = retrofit.create(MetService::class.java)
 
 }

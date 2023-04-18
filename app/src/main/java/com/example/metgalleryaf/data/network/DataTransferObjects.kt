@@ -6,19 +6,11 @@ import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
-data class HighlightIdList(
-    val total: Int,
+data class ItemIdList(
     val objectIDs: List<Int>
 )
 
-@JsonClass(generateAdapter = true)
-data class ItemIdList(
-    val total: Int,
-    val idList: List<Int>
-)
-
-@JsonClass(generateAdapter = true)
-data class NetworkItem(
+@JsonClass(generateAdapter = true) data class NetworkItem(
     val objectID: Int,
     val primaryImage: String,
     val primaryImageSmall: String,
