@@ -46,11 +46,13 @@ fun SearchSettings(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchBar(onSearchInputChanged = onSearchInputChanged, query = searchParameters.query)
-        Checkbox(checked = searchParameters.onlyHighlights, onCheckedChange = onHighlightCheck)
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(checked = searchParameters.onlyHighlights, onCheckedChange = onHighlightCheck)
+            Text(text = "Display only Highlights")
+        }
         Button(
             onClick = onSearchButtonClick,
             modifier = Modifier
-                .padding(top = 5.dp)
                 .widthIn(min = 100.dp)
                 .heightIn(min = 45.dp)
         ) {}

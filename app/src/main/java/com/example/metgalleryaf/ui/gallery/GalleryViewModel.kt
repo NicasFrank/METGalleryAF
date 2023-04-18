@@ -52,7 +52,11 @@ class GalleryViewModel(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val result = galleryRepository.findItems(query)
+            val result =
+                if(uiState.value.searchParameters.onlyHighlights)
+                    galleryRepository.findHighlights(query)
+                else
+                    galleryRepository.findItems(query)
             viewModelState.update {
                 if(result.isSuccess){
                     it.copy(matchingItems = result.getOrNull(), isLoading = false)
@@ -62,7 +66,6 @@ class GalleryViewModel(
                 }
             }
         }
-
     }
 
     fun onSearchInputChanged(query: String){

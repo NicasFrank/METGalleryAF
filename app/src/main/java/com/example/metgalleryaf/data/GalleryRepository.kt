@@ -23,7 +23,7 @@ class GalleryRepository(private val database: GalleryRoomDB) {
         return withContext(Dispatchers.IO){
             val itemIds = MetNetwork.metGallery.searchForQuery(query)
             val items = mutableListOf<Item>()
-            var idTest = 0;
+            var idTest: Int
             for(id in itemIds.objectIDs){
                 idTest = id
                 try {
@@ -42,5 +42,30 @@ class GalleryRepository(private val database: GalleryRoomDB) {
             }
         }
     }
+
+    suspend fun findHighlights(query: String): Result<List<Item>>{
+        return withContext(Dispatchers.IO){
+            val itemIds = MetNetwork.metGallery.searchForHighlight(query)
+            val items = mutableListOf<Item>()
+            var idTest: Int
+            for(id in itemIds.objectIDs){
+                idTest = id
+                try {
+                    items.add(MetNetwork.metGallery.getItem(id).asDomainModel())
+                }
+                catch (e: HttpException){
+                    println(idTest)
+                    continue
+                }
+            }
+            if(items.isEmpty()){
+                Result.failure(IllegalAccessException("No items found"))
+            }
+            else{
+                Result.success(items)
+            }
+        }
+    }
+
 
 }

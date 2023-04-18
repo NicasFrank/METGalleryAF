@@ -11,8 +11,11 @@ interface MetService{
     @GET("search?q=&isHighlight=true")
     suspend fun getHighlightIds(): ItemIdList
 
-    @GET("search")
+    @GET("search?")
     suspend fun searchForQuery(@Query("q") query: String): ItemIdList
+
+    @GET("search?isHighlight=true&")
+    suspend fun searchForHighlight(@Query("q") query: String): ItemIdList
 
     @GET("objects/{id}")
     suspend fun getItem(@Path("id") id: Int): NetworkItem
