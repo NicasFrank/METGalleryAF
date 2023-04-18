@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.metgalleryaf.model.Item
@@ -24,56 +25,70 @@ fun GalleryScreen(
 
     val uiState by galleryViewModel.uiState.collectAsStateWithLifecycle()
 
-    Column {
-        SearchBar(modifier = Modifier, onSearchInputChanged = {galleryViewModel.onSearchInputChanged(it)})
-        Button(
-            onClick = {galleryViewModel.searchForItems(uiState.query)}
-        ) {}
+    Column() {
+        SearchSettings(onSearchInputChanged = {galleryViewModel.onSearchInputChanged(it)},
+            onSearchButtonClick = {galleryViewModel.searchForItems(uiState.searchParameters.query)},
+            onHighlightCheck = {galleryViewModel.onHighlightCheck(uiState.searchParameters.onlyHighlights)},
+            searchParameters = uiState.searchParameters
+        )
         ItemGallery(itemList = uiState.matchingItems)
     }
 }
 
 @Composable
 fun SearchSettings(
-    modifier: Modifier = Modifier,
     onSearchInputChanged: (String)->Unit,
-    onSearchButtonClick: ()->Unit
+    onSearchButtonClick: ()->Unit,
+    onHighlightCheck: (Boolean)->Unit,
+    searchParameters: SearchParameters
 ){
-    Box(modifier.fillMaxWidth()) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-            SearchBar(modifier = modifier, onSearchInputChanged = onSearchInputChanged)
-            Button(
-                onClick = onSearchButtonClick
-            ) {}
-        }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SearchBar(onSearchInputChanged = onSearchInputChanged, query = searchParameters.query)
+        Checkbox(checked = searchParameters.onlyHighlights, onCheckedChange = onHighlightCheck)
+        Button(
+            onClick = onSearchButtonClick,
+            modifier = Modifier
+                .padding(top = 5.dp)
+                .widthIn(min = 100.dp)
+                .heightIn(min = 45.dp)
+        ) {}
     }
 }
 
+@Preview
+@Composable
+fun SearchSettingsPreview() = SearchSettings(
+    onSearchInputChanged = {},
+    onSearchButtonClick = {},
+    onHighlightCheck = {},
+    searchParameters = SearchParameters("", false)
+)
+
 @Composable
 fun SearchBar(
-    modifier: Modifier,
-    searchInput: String = "",
+    query: String = "",
     onSearchInputChanged: (String)->Unit
 ){
     TextField(
-        value = searchInput,
+        value = query,
         onValueChange = onSearchInputChanged,
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search, contentDescription = null) },
-        modifier = modifier
-            .heightIn(
-                min = 56.dp
-            )
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, top = 5.dp, end = 10.dp)
+            .heightIn(min = 56.dp)
             .clip(CircleShape)
     )
 }
 
 @Composable
 fun ItemGallery(
-    modifier: Modifier = Modifier,
     itemList: List<Item> = listOf()
 ){
-    LazyColumn(modifier = modifier){
+    LazyColumn(){
         items(itemList){
             item -> ItemElement(text = item.title)
         }
@@ -82,8 +97,7 @@ fun ItemGallery(
 
 @Composable
 fun ItemElement(
-    text: String,
-    modifier:Modifier = Modifier
+    text: String
 ){
     Text(
         text = text

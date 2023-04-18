@@ -13,20 +13,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class GalleryUiState(
-    val query: String,
+    val searchParameters: SearchParameters,
     val matchingItems: List<Item>,
     val isLoading: Boolean = false
 )
 
 private data class GalleryViewModelState(
-    val query: String? = null,
+    val searchParameters: SearchParameters? = null,
     val matchingItems: List<Item>? = null,
     val isLoading: Boolean = false
 ){
 
     fun toUiState(): GalleryUiState =
         GalleryUiState(
-            query = query ?: "",
+            searchParameters = searchParameters ?: SearchParameters("", false),
             matchingItems = matchingItems ?: listOf(),
             isLoading = isLoading
         )
@@ -66,8 +66,17 @@ class GalleryViewModel(
     }
 
     fun onSearchInputChanged(query: String){
+        val newParameters = SearchParameters(query, viewModelState.value.searchParameters?.onlyHighlights?:false)
         viewModelState.update {
-            it.copy(query = query)
+            it.copy(searchParameters = newParameters)
+        }
+    }
+
+    fun onHighlightCheck(onlyHighlights: Boolean){
+        val newParameters = SearchParameters(viewModelState.value.searchParameters?.query ?: "",
+        !onlyHighlights)
+        viewModelState.update {
+            it.copy(searchParameters = newParameters)
         }
     }
 
@@ -85,3 +94,8 @@ class GalleryViewModel(
         }
     }
 }
+
+data class SearchParameters(
+    val query: String,
+    val onlyHighlights: Boolean
+)
