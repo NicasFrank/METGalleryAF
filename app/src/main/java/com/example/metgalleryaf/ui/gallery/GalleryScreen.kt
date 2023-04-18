@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +16,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import com.example.metgalleryaf.model.Item
 
 @Composable
@@ -53,8 +57,8 @@ fun SearchSettings(
         Button(
             onClick = onSearchButtonClick,
             modifier = Modifier
-                .widthIn(min = 100.dp)
-                .heightIn(min = 45.dp)
+                .widthIn(min = 80.dp)
+                .heightIn(min = 40.dp)
         ) {}
     }
 }
@@ -92,16 +96,39 @@ fun ItemGallery(
 ){
     LazyColumn(){
         items(itemList){
-            item -> ItemElement(text = item.title)
+            item -> ItemElement(title = item.title, item.primaryImageSmall)
         }
     }
 }
 
 @Composable
 fun ItemElement(
-    text: String
+    title: String,
+    previewImg: String
 ){
-    Text(
-        text = text
-    )
+    Row(modifier = Modifier.padding(10.dp)) {
+        SubcomposeAsyncImage(
+            model = previewImg,
+            contentDescription = "Preview Image",
+            modifier = Modifier.size(width = 100.dp, height = 100.dp)
+        ) {
+            when(painter.state){
+                is AsyncImagePainter.State.Loading ->
+                    CircularProgressIndicator()
+                is AsyncImagePainter.State.Error ->
+                    Icons.Default.Warning
+                is AsyncImagePainter.State.Empty ->
+                    Icons.Default.Warning
+                is AsyncImagePainter.State.Success ->
+                    SubcomposeAsyncImageContent()
+            }
+        }
+        Text(
+            text = title
+        )
+    }
 }
+
+@Preview
+@Composable
+fun ItemElementPreview() = ItemElement(title = "Mona Lisa", previewImg = "https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg")
