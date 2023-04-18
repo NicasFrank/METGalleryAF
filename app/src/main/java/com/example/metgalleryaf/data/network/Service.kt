@@ -1,5 +1,9 @@
 package com.example.metgalleryaf.data.network
 
+import com.example.metgalleryaf.model.Item
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -12,7 +16,7 @@ interface MetService{
     suspend fun getHighlightIds(): ItemIdList
 
     @GET("search?")
-    suspend fun searchForQuery(@Query("q") query: String): ItemIdList
+    suspend fun searchForItem(@Query("q") query: String): ItemIdList
 
     @GET("search?isHighlight=true&")
     suspend fun searchForHighlight(@Query("q") query: String): ItemIdList
@@ -29,5 +33,33 @@ object MetNetwork{
         .build()
 
     val metGallery: MetService = retrofit.create(MetService::class.java)
+
+    suspend fun fetchItems(query: String, onlyHighlights: Boolean): Result<List<Item>>{
+        return withContext(Dispatchers.IO){
+            val itemIds =
+                if(onlyHighlights)
+                    metGallery.searchForHighlight(query)
+                else
+                    metGallery.searchForItem(query)
+            val items = mutableListOf<Item>()
+            var idTest: Int
+            for(id in itemIds.objectIDs){
+                idTest = id
+                try {
+                    items.add(metGallery.getItem(id).asDomainModel())
+                }
+                catch (e: HttpException){
+                    println(idTest)
+                    continue
+                }
+            }
+            if(items.isEmpty()){
+                Result.failure(IllegalAccessException("No items found"))
+            }
+            else{
+                Result.success(items)
+            }
+        }
+    }
 
 }
