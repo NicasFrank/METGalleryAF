@@ -7,13 +7,6 @@ import com.example.metgalleryaf.model.Item
 
 class GalleryRepository(private val database: GalleryRoomDB) {
 
-    private val dummyItems = listOf(
-        Item(1, "Der"),
-        Item(1, "Hse"),
-        Item(3,"Ist"),
-        Item(4, "weich"),
-        Item(5, "und")
-    )
 
     suspend fun saveHighlights(){
         val highlightIdList = MetNetwork.metGallery.getHighlightIds()

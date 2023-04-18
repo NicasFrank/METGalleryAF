@@ -15,7 +15,7 @@ interface MetService{
     suspend fun searchForQuery(@Query("q") query: String): ItemIdList
 
     @GET("objects/{id}")
-    suspend fun getItem(@Path("id") id: Int): Item
+    suspend fun getItem(@Path("id") id: Int): NetworkItem
 }
 
 object MetNetwork{

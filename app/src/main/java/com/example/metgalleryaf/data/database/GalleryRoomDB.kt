@@ -3,20 +3,33 @@ package com.example.metgalleryaf.data.database
 import android.content.Context
 import androidx.room.*
 import com.example.metgalleryaf.model.Item
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapter
 
 
 @Entity
 data class DatabaseItem constructor(
     @PrimaryKey
-    val objectId: Int,
-    val title: String
+    val objectID: Int,
+    val primaryImage: String,
+    val primaryImageSmall: String,
+    val additionalImages: List<String>,
+    val title: String,
+    val artistDisplayName: String,
+    val objectDate: String
 )
 
 fun List<DatabaseItem>.asDomainModel(): List<Item>{
     return map {
         Item(
-            objectID = it.objectId,
-            title = it.title
+            objectID = it.objectID,
+            primaryImage = it.primaryImage,
+            primaryImageSmall = it.primaryImageSmall,
+            additionalImages = it.additionalImages,
+            title = it.title,
+            artistDisplayName = it.artistDisplayName,
+            objectDate = it.objectDate
         )
     }
 }
@@ -30,7 +43,8 @@ interface ItemDao{
     suspend fun insertItem(item: DatabaseItem)
 }
 
-@Database(entities = [DatabaseItem::class], version = 2)
+@Database(entities = [DatabaseItem::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class GalleryRoomDB: RoomDatabase() {
     abstract val itemDao: ItemDao
 }
@@ -49,4 +63,20 @@ fun getDatabase(context: Context): GalleryRoomDB{
         }
     }
     return INSTANCE
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+class Converters{
+    private val moshi: Moshi = Moshi.Builder().build()
+    private val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter<List<String>>()
+
+    @TypeConverter
+    fun stringListToJson(list: List<String>): String{
+        return jsonAdapter.toJson(list)
+    }
+
+    @TypeConverter
+    fun jsonToStringList(json: String): List<String>{
+        return jsonAdapter.fromJson(json)?: listOf()
+    }
 }
