@@ -74,7 +74,7 @@ class GalleryViewModel(
         }
     }
 
-    fun onHighlightCheck(onlyHighlights: Boolean) {
+    fun onHighlightCheck() {
         val newParameters = viewModelState.value.searchParameters?.let {
             SearchParameters(
                 it.query,

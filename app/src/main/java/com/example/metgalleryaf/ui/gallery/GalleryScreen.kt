@@ -33,7 +33,7 @@ fun GalleryScreen(
     Column() {
         SearchSettings(onSearchInputChanged = {galleryViewModel.onSearchInputChanged(it)},
             onSearchButtonClick = {galleryViewModel.searchForItems()},
-            onHighlightCheck = {galleryViewModel.onHighlightCheck(uiState.searchParameters.onlyHighlights)},
+            onHighlightCheck = {galleryViewModel.onHighlightCheck()},
             searchParameters = uiState.searchParameters
         )
         ItemGallery(itemList = uiState.matchingItems, onClickItem = onClickItem)
