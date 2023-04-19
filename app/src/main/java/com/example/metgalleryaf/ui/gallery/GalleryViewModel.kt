@@ -52,10 +52,9 @@ class GalleryViewModel(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val itemList = galleryRepository.fetchItems(
-                uiState.value.searchParameters.query,
-                uiState.value.searchParameters.onlyHighlights
-            )
+            val itemList = uiState.value.searchParameters.let{
+                galleryRepository.fetchItems(it.query, it.onlyHighlights)
+            }
             viewModelState.update {
                 it.copy(matchingItems = itemList, isLoading = false)
             }
@@ -63,7 +62,7 @@ class GalleryViewModel(
     }
 
     fun onSearchInputChanged(query: String) {
-        val newParameters = viewModelState.value.searchParameters?.let {
+        val newParameters = uiState.value.searchParameters.let {
             SearchParameters(
                 query,
                 it.onlyHighlights
@@ -75,7 +74,7 @@ class GalleryViewModel(
     }
 
     fun onHighlightCheck() {
-        val newParameters = viewModelState.value.searchParameters?.let {
+        val newParameters = uiState.value.searchParameters.let {
             SearchParameters(
                 it.query,
                 it.onlyHighlights.not()
