@@ -1,5 +1,6 @@
 package com.example.metgalleryaf.ui.gallery
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +25,7 @@ import com.example.metgalleryaf.model.Item
 @Composable
 fun GalleryScreen(
     galleryViewModel: GalleryViewModel,
-    onClickItem: () -> Unit
+    onClickItem: (Int) -> Unit
 ) {
 
     val uiState by galleryViewModel.uiState.collectAsStateWithLifecycle()
@@ -35,7 +36,7 @@ fun GalleryScreen(
             onHighlightCheck = {galleryViewModel.onHighlightCheck(uiState.searchParameters.onlyHighlights)},
             searchParameters = uiState.searchParameters
         )
-        ItemGallery(itemList = uiState.matchingItems)
+        ItemGallery(itemList = uiState.matchingItems, onClickItem = onClickItem)
     }
 }
 
@@ -92,43 +93,56 @@ fun SearchBar(
 
 @Composable
 fun ItemGallery(
-    itemList: List<Item> = listOf()
+    itemList: List<Item> = listOf(),
+    onClickItem: (Int) -> Unit
 ){
     LazyColumn(){
         items(itemList){
-            item -> ItemElement(title = item.title, item.primaryImageSmall)
+            item -> ItemElement(
+            itemId = item.objectID,
+            title = item.title,
+            item.primaryImageSmall,
+            onClickItem = onClickItem
+            )
         }
     }
 }
 
 @Composable
 fun ItemElement(
+    itemId: Int,
     title: String,
-    previewImg: String
+    previewImg: String,
+    onClickItem: (Int) -> Unit
 ){
-    Row(modifier = Modifier.padding(10.dp)) {
-        SubcomposeAsyncImage(
-            model = previewImg,
-            contentDescription = "Preview Image",
-            modifier = Modifier.size(width = 100.dp, height = 100.dp)
+    Card(
+        modifier = Modifier.clickable { onClickItem(itemId) },
+        content = {Row(modifier = Modifier.padding(10.dp)
         ) {
-            when(painter.state){
-                is AsyncImagePainter.State.Loading ->
-                    CircularProgressIndicator()
-                is AsyncImagePainter.State.Error ->
-                    Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
-                is AsyncImagePainter.State.Empty ->
-                    Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
-                is AsyncImagePainter.State.Success ->
-                    SubcomposeAsyncImageContent()
+            SubcomposeAsyncImage(
+                model = previewImg,
+                contentDescription = "Preview Image",
+                modifier = Modifier.size(width = 100.dp, height = 100.dp)
+            ) {
+                when(painter.state){
+                    is AsyncImagePainter.State.Loading ->
+                        CircularProgressIndicator()
+                    is AsyncImagePainter.State.Error ->
+                        Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
+                    is AsyncImagePainter.State.Empty ->
+                        Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
+                    is AsyncImagePainter.State.Success ->
+                        SubcomposeAsyncImageContent()
+                }
             }
+            Text(
+                text = title
+            )
         }
-        Text(
-            text = title
-        )
-    }
+        }
+    )
 }
 
 @Preview
 @Composable
-fun ItemElementPreview() = ItemElement(title = "Mona Lisa", previewImg = "https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg")
+fun ItemElementPreview() = ItemElement(itemId = 1, title = "Mona Lisa", previewImg = "https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg") {}

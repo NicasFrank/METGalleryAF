@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.metgalleryaf.data.AppContainer
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
 import com.example.metgalleryaf.ui.gallery.GalleryViewModel
@@ -20,7 +22,7 @@ object GalleryDestination: MetGalleryDestinations{
 }
 
 object ItemDestination: MetGalleryDestinations{
-    override val route = "item"
+    override val route = "item/{itemId}"
 }
 
 @Composable
@@ -37,20 +39,22 @@ fun MetGalleryNavHost(
                 factory = GalleryViewModel.provideFactory(appContainer.galleryRepository)
             )
             GalleryScreen(
-                galleryViewModel
+                galleryViewModel,
+                navController::navigateToItem
             )
-            { navController.navigateSingleTopTo(ItemDestination.route) }
         }
-        composable(route = ItemDestination.route){
-            ItemScreen {
-
-            }
+        composable(
+            route = ItemDestination.route,
+            arguments = listOf(navArgument("itemId"){type = NavType.IntType})
+            ){
+            ItemScreen({}, it.arguments?.getInt("itemId"))
         }
     }
 }
 
-fun NavHostController.navigateSingleTopTo(route: String) =
-    this.navigate(route) {
-        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id)
+fun NavHostController.navigateToItem(objectId: Int){
+    this.navigate("item/$objectId"){
+        popUpTo(this@navigateToItem.graph.findStartDestination().id)
         launchSingleTop = true
     }
+}
