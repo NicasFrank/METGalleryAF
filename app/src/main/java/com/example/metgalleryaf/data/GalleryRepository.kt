@@ -19,7 +19,7 @@ class GalleryRepository(private val database: GalleryRoomDB) {
                     database.itemDao.insertItem(item.asDatabaseModel())
                 }
             }
-            Result.success(database.itemDao.getItems(query).asDomainModel())
+            Result.success(database.itemDao.getItems("%$query%").asDomainModel())
         }
     }
 
