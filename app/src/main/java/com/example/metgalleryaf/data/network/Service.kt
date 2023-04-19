@@ -1,5 +1,6 @@
 package com.example.metgalleryaf.data.network
 
+import android.accounts.NetworkErrorException
 import com.example.metgalleryaf.model.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,8 +13,6 @@ import retrofit2.http.Query
 
 
 interface MetService{
-    @GET("search?q=&isHighlight=true")
-    suspend fun getHighlightIds(): ItemIdList
 
     @GET("search?")
     suspend fun searchForItem(@Query("q") query: String): ItemIdList
@@ -36,28 +35,32 @@ object MetNetwork{
 
     suspend fun fetchItems(query: String, onlyHighlights: Boolean): Result<List<Item>>{
         return withContext(Dispatchers.IO){
-            val itemIds =
-                if(onlyHighlights)
-                    metGallery.searchForHighlight(query)
-                else
-                    metGallery.searchForItem(query)
-            val items = mutableListOf<Item>()
-            var idTest: Int
-            for(id in itemIds.objectIDs){
-                idTest = id
-                try {
-                    items.add(metGallery.getItem(id).asDomainModel())
+            try {
+                val itemIds =
+                    if(onlyHighlights)
+                        metGallery.searchForHighlight(query)
+                    else
+                        metGallery.searchForItem(query)
+                val items = mutableListOf<Item>()
+                var idTest: Int
+                for(id in itemIds.objectIDs){
+                    idTest = id
+                    try {
+                        items.add(metGallery.getItem(id).asDomainModel())
+                    }
+                    catch (e: HttpException){
+                        println(idTest)
+                        continue
+                    }
                 }
-                catch (e: HttpException){
-                    println(idTest)
-                    continue
+                if(items.isEmpty()){
+                    Result.failure(IllegalArgumentException("No items found"))
                 }
-            }
-            if(items.isEmpty()){
-                Result.failure(IllegalAccessException("No items found"))
-            }
-            else{
-                Result.success(items)
+                else{
+                    Result.success(items)
+                }
+            } catch (e:Exception){
+                Result.failure(NetworkErrorException("Couldn't connect to Server"))
             }
         }
     }

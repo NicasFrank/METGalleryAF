@@ -36,8 +36,8 @@ fun List<DatabaseItem>.asDomainModel(): List<Item>{
 
 @Dao
 interface ItemDao{
-    @Query("select * from databaseitem")
-    suspend fun getItems(): List<DatabaseItem>
+    @Query("SELECT * FROM databaseitem WHERE title LIKE %:query%")
+    suspend fun getItems(query: String): List<DatabaseItem>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertItem(item: DatabaseItem)
