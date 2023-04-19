@@ -23,7 +23,10 @@ object GalleryDestination : MetGalleryDestinations {
 }
 
 object ItemDestination : MetGalleryDestinations {
-    override val route = "item/{itemId}"
+    override val route = "item"
+    const val itemIdArg = "itemId"
+    val routeWithArgs = "$route/{$itemIdArg}"
+    val arguments = listOf(navArgument("itemId") { type = NavType.IntType })
 }
 
 @Composable
@@ -42,15 +45,14 @@ fun MetGalleryNavHost(
                 factory = GalleryViewModel.provideFactory(appContainer.galleryRepository)
             )
             GalleryScreen(
-                galleryViewModel,
-                navController::navigateToItem
-            )
+                galleryViewModel
+            ) { itemId -> navController.navigateToItem(itemId) }
         }
         composable(
-            route = ItemDestination.route,
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+            route = ItemDestination.routeWithArgs,
+            arguments = ItemDestination.arguments
         ) {
-            ItemScreen({}, it.arguments?.getInt("itemId"))
+            ItemScreen({}, it.arguments?.getInt(ItemDestination.itemIdArg))
         }
     }
 }

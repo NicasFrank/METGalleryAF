@@ -52,7 +52,7 @@ class GalleryViewModel(
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val itemList = uiState.value.searchParameters.let{
+            val itemList = uiState.value.searchParameters.let {
                 galleryRepository.fetchItems(it.query, it.onlyHighlights)
             }
             viewModelState.update {
