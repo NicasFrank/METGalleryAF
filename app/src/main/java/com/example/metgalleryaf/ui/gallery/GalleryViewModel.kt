@@ -22,7 +22,7 @@ private data class GalleryViewModelState(
     val searchParameters: SearchParameters? = null,
     val matchingItems: List<Item>? = null,
     val isLoading: Boolean = false
-){
+) {
 
     fun toUiState(): GalleryUiState =
         GalleryUiState(
@@ -36,7 +36,7 @@ private data class GalleryViewModelState(
 
 class GalleryViewModel(
     private val galleryRepository: GalleryRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(GalleryViewModelState())
 
@@ -48,45 +48,50 @@ class GalleryViewModel(
             viewModelState.value.toUiState()
         )
 
-    fun searchForItems(query: String){
+    fun searchForItems() {
         viewModelState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val result = galleryRepository.fetchItems(
+            val itemList = galleryRepository.fetchItems(
                 uiState.value.searchParameters.query,
-                uiState.value.searchParameters.onlyHighlights)
+                uiState.value.searchParameters.onlyHighlights
+            )
             viewModelState.update {
-                if(result.isSuccess){
-                    it.copy(matchingItems = result.getOrNull(), isLoading = false)
-                }
-                else{
-                    it.copy(matchingItems = listOf(), isLoading = false)
-                }
+                it.copy(matchingItems = itemList, isLoading = false)
             }
         }
     }
 
-    fun onSearchInputChanged(query: String){
-        val newParameters = SearchParameters(query, viewModelState.value.searchParameters?.onlyHighlights?:false)
+    fun onSearchInputChanged(query: String) {
+        val newParameters = viewModelState.value.searchParameters?.let {
+            SearchParameters(
+                query,
+                it.onlyHighlights
+            )
+        }
         viewModelState.update {
             it.copy(searchParameters = newParameters)
         }
     }
 
-    fun onHighlightCheck(onlyHighlights: Boolean){
-        val newParameters = SearchParameters(viewModelState.value.searchParameters?.query ?: "",
-        !onlyHighlights)
+    fun onHighlightCheck(onlyHighlights: Boolean) {
+        val newParameters = viewModelState.value.searchParameters?.let {
+            SearchParameters(
+                it.query,
+                it.onlyHighlights.not()
+            )
+        }
         viewModelState.update {
             it.copy(searchParameters = newParameters)
         }
     }
 
-    companion object{
+    companion object {
         fun provideFactory(
             galleryRepository: GalleryRepository
-        ): ViewModelProvider.Factory = object :ViewModelProvider.Factory{
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if(modelClass.isAssignableFrom(GalleryViewModel::class.java)){
+                if (modelClass.isAssignableFrom(GalleryViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
                     return GalleryViewModel(galleryRepository) as T
                 }

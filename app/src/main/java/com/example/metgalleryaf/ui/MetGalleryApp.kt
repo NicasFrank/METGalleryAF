@@ -1,10 +1,12 @@
 package com.example.metgalleryaf.ui
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.metgalleryaf.data.AppContainer
@@ -18,8 +20,14 @@ fun MetGalleryApp(appContainer: AppContainer) {
     METGalleryAFTheme {
         val navController = rememberNavController()
         Scaffold(
-            //topBar = {TopAppBar(title = { Text(text = "Gallery")})},
-            content = {MetGalleryNavHost(appContainer = appContainer, navController = navController)}
+            topBar = { TopAppBar(title = { Text(text = "Gallery") }) },
+            content = {
+                MetGalleryNavHost(
+                    modifier = Modifier.padding(it),
+                    appContainer = appContainer,
+                    navController = navController
+                )
+            }
         )
     }
 }
@@ -28,6 +36,6 @@ fun MetGalleryApp(appContainer: AppContainer) {
 @Preview
 @Composable
 fun MyScaffold() = Scaffold(
-    topBar = {TopAppBar(title = { Text(text = "SGallery")})},
-    content = { Text(text = "Text")}
+    topBar = { TopAppBar(title = { Text(text = "SGallery") }) },
+    content = { Text(text = "Text") }
 )

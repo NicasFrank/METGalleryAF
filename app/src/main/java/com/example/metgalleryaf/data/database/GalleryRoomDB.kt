@@ -20,7 +20,7 @@ data class DatabaseItem constructor(
     val objectDate: String
 )
 
-fun List<DatabaseItem>.asDomainModel(): List<Item>{
+fun List<DatabaseItem>.asDomainModel(): List<Item> {
     return map {
         Item(
             objectID = it.objectID,
@@ -35,7 +35,7 @@ fun List<DatabaseItem>.asDomainModel(): List<Item>{
 }
 
 @Dao
-interface ItemDao{
+interface ItemDao {
     @Query("SELECT * FROM databaseitem WHERE title LIKE :query")
     suspend fun getItems(query: String): List<DatabaseItem>
 
@@ -45,20 +45,20 @@ interface ItemDao{
 
 @Database(entities = [DatabaseItem::class], version = 3)
 @TypeConverters(Converters::class)
-abstract class GalleryRoomDB: RoomDatabase() {
+abstract class GalleryRoomDB : RoomDatabase() {
     abstract val itemDao: ItemDao
 }
 
 private lateinit var INSTANCE: GalleryRoomDB
 
-fun getDatabase(context: Context): GalleryRoomDB{
-    synchronized(GalleryRoomDB::class.java){
-        if(!::INSTANCE.isInitialized){
+fun getDatabase(context: Context): GalleryRoomDB {
+    synchronized(GalleryRoomDB::class.java) {
+        if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(
                 context.applicationContext,
                 GalleryRoomDB::class.java,
                 "item_database"
-                ).fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration()
                 .build()
         }
     }
@@ -66,17 +66,17 @@ fun getDatabase(context: Context): GalleryRoomDB{
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-class Converters{
+class Converters {
     private val moshi: Moshi = Moshi.Builder().build()
     private val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter<List<String>>()
 
     @TypeConverter
-    fun stringListToJson(list: List<String>): String{
+    fun stringListToJson(list: List<String>): String {
         return jsonAdapter.toJson(list)
     }
 
     @TypeConverter
-    fun jsonToStringList(json: String): List<String>{
-        return jsonAdapter.fromJson(json)?: listOf()
+    fun jsonToStringList(json: String): List<String> {
+        return jsonAdapter.fromJson(json) ?: listOf()
     }
 }
