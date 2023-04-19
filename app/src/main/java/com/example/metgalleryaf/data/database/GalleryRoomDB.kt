@@ -12,6 +12,7 @@ import com.squareup.moshi.adapter
 data class DatabaseItem constructor(
     @PrimaryKey
     val objectID: Int,
+    val isHighlight: Boolean,
     val primaryImage: String,
     val primaryImageSmall: String,
     val additionalImages: List<String>,
@@ -39,11 +40,14 @@ interface ItemDao {
     @Query("SELECT * FROM databaseitem WHERE title LIKE :query")
     suspend fun getItems(query: String): List<DatabaseItem>
 
+    @Query("SELECT * FROM databaseitem WHERE title LIKE :query AND isHighlight")
+    suspend fun getHighlights(query: String): List<DatabaseItem>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertItem(item: DatabaseItem)
 }
 
-@Database(entities = [DatabaseItem::class], version = 3)
+@Database(entities = [DatabaseItem::class], version = 4)
 @TypeConverters(Converters::class)
 abstract class GalleryRoomDB : RoomDatabase() {
     abstract val itemDao: ItemDao

@@ -116,7 +116,9 @@ fun ItemElement(
     onClickItem: (Int) -> Unit
 ){
     Card(
-        modifier = Modifier.clickable { onClickItem(itemId) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClickItem(itemId) },
         content = {Row(modifier = Modifier.padding(10.dp)
         ) {
             SubcomposeAsyncImage(
