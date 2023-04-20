@@ -6,4 +6,6 @@
     <string name="search_text">Search</string>
     <string name="additional_image">additional image</string>
     <string name="main_image">main image</string>
+    <string name="gallery_headline">Gallery</string>
+    <string name="navigate_back">return</string>
 </resources>
