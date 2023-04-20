@@ -30,11 +30,25 @@ fun GalleryScreen(
 
     val uiState by galleryViewModel.uiState.collectAsStateWithLifecycle()
 
-    Column() {
-        SearchSettings(onSearchInputChanged = {galleryViewModel.onSearchInputChanged(it)},
-            onSearchButtonClick = {galleryViewModel.searchForItems()},
-            onHighlightCheck = {galleryViewModel.onHighlightCheck()},
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        SearchSettings(
+            onSearchInputChanged = { galleryViewModel.onSearchInputChanged(it) },
+            onHighlightCheck = { galleryViewModel.onHighlightCheck() },
             searchParameters = uiState.searchParameters
+        )
+        FilledIconButton(
+            onClick = { galleryViewModel.searchForItems() },
+            modifier = Modifier
+                .widthIn(min = 80.dp)
+                .heightIn(min = 40.dp),
+            content = {
+                if (uiState.isLoading)
+                    CircularProgressIndicator()
+                else
+                    Text(text = "Search")
+
+            },
+            enabled = !uiState.isLoading
         )
         ItemGallery(itemList = uiState.matchingItems, onClickItem = onClickItem)
     }
@@ -42,25 +56,21 @@ fun GalleryScreen(
 
 @Composable
 fun SearchSettings(
-    onSearchInputChanged: (String)->Unit,
-    onSearchButtonClick: ()->Unit,
-    onHighlightCheck: (Boolean)->Unit,
+    onSearchInputChanged: (String) -> Unit,
+    onHighlightCheck: (Boolean) -> Unit,
     searchParameters: SearchParameters
-){
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchBar(onSearchInputChanged = onSearchInputChanged, query = searchParameters.query)
-        Row(horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Checkbox(checked = searchParameters.onlyHighlights, onCheckedChange = onHighlightCheck)
             Text(text = "Display only Highlights")
         }
-        Button(
-            onClick = onSearchButtonClick,
-            modifier = Modifier
-                .widthIn(min = 80.dp)
-                .heightIn(min = 40.dp)
-        ) {}
     }
 }
 
@@ -68,7 +78,6 @@ fun SearchSettings(
 @Composable
 fun SearchSettingsPreview() = SearchSettings(
     onSearchInputChanged = {},
-    onSearchButtonClick = {},
     onHighlightCheck = {},
     searchParameters = SearchParameters("", false)
 )
@@ -76,13 +85,14 @@ fun SearchSettingsPreview() = SearchSettings(
 @Composable
 fun SearchBar(
     query: String = "",
-    onSearchInputChanged: (String)->Unit
-){
+    onSearchInputChanged: (String) -> Unit
+) {
     TextField(
         value = query,
         onValueChange = onSearchInputChanged,
         leadingIcon = {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null) },
+            Icon(imageVector = Icons.Default.Search, contentDescription = null)
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 10.dp, top = 5.dp, end = 10.dp)
@@ -95,14 +105,17 @@ fun SearchBar(
 fun ItemGallery(
     itemList: List<Item> = listOf(),
     onClickItem: (Int) -> Unit
-){
-    LazyColumn(){
-        items(itemList){
-            item -> ItemElement(
-            itemId = item.objectID,
-            title = item.title,
-            item.primaryImageSmall,
-            onClickItem = onClickItem
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(itemList) { item ->
+            ItemElement(
+                itemId = item.objectID,
+                title = item.title,
+                item.primaryImageSmall,
+                onClickItem = onClickItem
             )
         }
     }
@@ -114,37 +127,49 @@ fun ItemElement(
     title: String,
     previewImg: String,
     onClickItem: (Int) -> Unit
-){
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClickItem(itemId) },
-        content = {Row(modifier = Modifier.padding(10.dp)
-        ) {
-            SubcomposeAsyncImage(
-                model = previewImg,
-                contentDescription = "Preview Image",
-                modifier = Modifier.size(width = 100.dp, height = 100.dp)
+        content = {
+            Row(
+                modifier = Modifier.padding(10.dp)
             ) {
-                when(painter.state){
-                    is AsyncImagePainter.State.Loading ->
-                        CircularProgressIndicator()
-                    is AsyncImagePainter.State.Error ->
-                        Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
-                    is AsyncImagePainter.State.Empty ->
-                        Icon(imageVector = Icons.Default.Warning, contentDescription = "No Image Available")
-                    is AsyncImagePainter.State.Success ->
-                        SubcomposeAsyncImageContent()
+                SubcomposeAsyncImage(
+                    model = previewImg,
+                    contentDescription = "Preview Image",
+                    modifier = Modifier.size(width = 100.dp, height = 100.dp)
+                ) {
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading ->
+                            CircularProgressIndicator()
+                        is AsyncImagePainter.State.Error ->
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = "No Image Available"
+                            )
+                        is AsyncImagePainter.State.Empty ->
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = "No Image Available"
+                            )
+                        is AsyncImagePainter.State.Success ->
+                            SubcomposeAsyncImageContent()
+                    }
                 }
+                Text(
+                    text = title
+                )
             }
-            Text(
-                text = title
-            )
-        }
         }
     )
 }
 
 @Preview
 @Composable
-fun ItemElementPreview() = ItemElement(itemId = 1, title = "Mona Lisa", previewImg = "https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg") {}
+fun ItemElementPreview() = ItemElement(
+    itemId = 1,
+    title = "Mona Lisa",
+    previewImg = "https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg"
+) {}
