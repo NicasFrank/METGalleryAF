@@ -9,9 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.metgalleryaf.data.AppContainer
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
-import com.example.metgalleryaf.ui.gallery.GalleryViewModel
 import com.example.metgalleryaf.ui.item.ItemScreen
 import com.example.metgalleryaf.ui.item.ItemViewModel
 
@@ -33,7 +31,6 @@ object ItemDestination : MetGalleryDestinations {
 @Composable
 fun MetGalleryNavHost(
     modifier: Modifier = Modifier,
-    appContainer: AppContainer,
     navController: NavHostController
 ) {
     NavHost(
@@ -42,11 +39,7 @@ fun MetGalleryNavHost(
         startDestination = GalleryDestination.route
     ) {
         composable(route = GalleryDestination.route) {
-            val galleryViewModel: GalleryViewModel = viewModel(
-                factory = GalleryViewModel.provideFactory(appContainer.galleryRepository)
-            )
             GalleryScreen(
-                galleryViewModel
             ) { itemId -> navController.navigateToItem(itemId) }
         }
         composable(
@@ -55,7 +48,6 @@ fun MetGalleryNavHost(
         ) {
             val itemViewModel: ItemViewModel = viewModel(
                 factory = ItemViewModel.provideFactory(
-                    appContainer.galleryRepository,
                     it.arguments?.getInt(ItemDestination.itemIdArg)
                 )
             )

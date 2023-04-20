@@ -11,14 +11,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.metgalleryaf.R
-import com.example.metgalleryaf.data.AppContainer
 import com.example.metgalleryaf.navigation.ItemDestination
 import com.example.metgalleryaf.navigation.MetGalleryNavHost
 import com.example.metgalleryaf.ui.theme.METGalleryAFTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MetGalleryApp(appContainer: AppContainer) {
+fun MetGalleryApp() {
 
     METGalleryAFTheme {
         val navController = rememberNavController()
@@ -47,7 +46,6 @@ fun MetGalleryApp(appContainer: AppContainer) {
             content = {
                 MetGalleryNavHost(
                     modifier = Modifier.padding(it),
-                    appContainer = appContainer,
                     navController = navController
                 )
             }

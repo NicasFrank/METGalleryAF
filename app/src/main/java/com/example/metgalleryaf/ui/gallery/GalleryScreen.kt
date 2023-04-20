@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -26,9 +27,10 @@ import com.example.metgalleryaf.model.Item
 
 @Composable
 fun GalleryScreen(
-    galleryViewModel: GalleryViewModel,
     onClickItem: (Int) -> Unit
 ) {
+
+    val galleryViewModel: GalleryViewModel = viewModel()
 
     val uiState by galleryViewModel.uiState.collectAsStateWithLifecycle()
 

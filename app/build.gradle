@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id("com.google.devtools.ksp") version "1.8.0-1.0.9"
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+    id 'kotlin-kapt'
 }
 
 android {
@@ -72,7 +73,7 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:2.45")
-    ksp("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     //Moshi
     implementation "com.squareup.moshi:moshi:1.14.0"

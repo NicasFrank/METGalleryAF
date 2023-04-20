@@ -69,20 +69,13 @@ abstract class GalleryRoomDB : RoomDatabase() {
     abstract val itemDao: ItemDao
 }
 
-private lateinit var INSTANCE: GalleryRoomDB
-
 fun getDatabase(context: Context): GalleryRoomDB {
-    synchronized(GalleryRoomDB::class.java) {
-        if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(
-                context.applicationContext,
-                GalleryRoomDB::class.java,
-                "item_database"
-            ).fallbackToDestructiveMigration()
-                .build()
-        }
-    }
-    return INSTANCE
+    return Room.databaseBuilder(
+        context.applicationContext,
+        GalleryRoomDB::class.java,
+        "item_database"
+    ).fallbackToDestructiveMigration()
+        .build()
 }
 
 @OptIn(ExperimentalStdlibApi::class)

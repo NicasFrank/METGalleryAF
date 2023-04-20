@@ -9,11 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.metgalleryaf.data.GalleryRepository
 import com.example.metgalleryaf.model.Item
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class ItemViewModel(
-    private val galleryRepository: GalleryRepository,
     private val itemId: Int?
 ) : ViewModel() {
+
+    @Inject
+    lateinit var galleryRepository: GalleryRepository
 
     private val initialItem: Item? = null
     var item by mutableStateOf(initialItem)
@@ -29,13 +32,12 @@ class ItemViewModel(
 
     companion object {
         fun provideFactory(
-            galleryRepository: GalleryRepository,
             itemId: Int?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return ItemViewModel(galleryRepository, itemId) as T
+                    return ItemViewModel(itemId) as T
                 }
                 throw IllegalArgumentException("Unable to construct ViewModel")
             }

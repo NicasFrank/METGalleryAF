@@ -5,8 +5,9 @@ import com.example.metgalleryaf.data.database.itemAsDomainModel
 import com.example.metgalleryaf.data.database.itemListAsDomainModel
 import com.example.metgalleryaf.data.network.MetNetwork
 import com.example.metgalleryaf.model.Item
+import javax.inject.Inject
 
-class GalleryRepository(private val database: GalleryRoomDB) {
+class GalleryRepository @Inject constructor(private val database: GalleryRoomDB) {
 
     suspend fun fetchItems(query: String, onlyHighlights: Boolean): List<Item> {
         val result = MetNetwork.fetchItems(query, onlyHighlights)
