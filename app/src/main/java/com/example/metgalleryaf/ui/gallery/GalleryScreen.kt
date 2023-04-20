@@ -107,8 +107,9 @@ fun ItemGallery(
     onClickItem: (Int) -> Unit
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(top = 16.dp)
     ) {
         items(itemList) { item ->
             ItemElement(
@@ -134,6 +135,7 @@ fun ItemElement(
             .clickable { onClickItem(itemId) },
         content = {
             Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(10.dp)
             ) {
                 SubcomposeAsyncImage(
@@ -158,9 +160,12 @@ fun ItemElement(
                             SubcomposeAsyncImageContent()
                     }
                 }
-                Text(
-                    text = title
-                )
+                Column() {
+                    Text(text = itemId.toString())
+                    Text(
+                        text = title
+                    )
+                }
             }
         }
     )

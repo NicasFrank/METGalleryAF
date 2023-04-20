@@ -5,16 +5,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.metgalleryaf.data.GalleryRepository
 
 class ItemViewModel(
-    private val galleryRepository: GalleryRepository
+    private val galleryRepository: GalleryRepository,
+    private val itemId: Int?
 ): ViewModel() {
     companion object{
         fun provideFactory(
-            galleryRepository: GalleryRepository
+            galleryRepository: GalleryRepository,
+            itemId: Int?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if(modelClass.isAssignableFrom(ItemViewModel::class.java)){
                     @Suppress("UNCHECKED_CAST")
-                    return ItemViewModel(galleryRepository) as T
+                    return ItemViewModel(galleryRepository, itemId) as T
                 }
                 throw IllegalArgumentException("Unable to construct ViewModel")
             }

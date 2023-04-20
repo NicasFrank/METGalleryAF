@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ItemScreen(
-    onClickBack: () -> Unit,
-    itemId: Int?
+    itemViewModel: ItemViewModel
 ) {
-    Text(text = "This is the ItemScreen for $itemId!")
+    Text(text = "This is the ItemScreen for ")
 }

@@ -13,6 +13,7 @@ import com.example.metgalleryaf.data.AppContainer
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
 import com.example.metgalleryaf.ui.gallery.GalleryViewModel
 import com.example.metgalleryaf.ui.item.ItemScreen
+import com.example.metgalleryaf.ui.item.ItemViewModel
 
 interface MetGalleryDestinations {
     val route: String
@@ -52,7 +53,13 @@ fun MetGalleryNavHost(
             route = ItemDestination.routeWithArgs,
             arguments = ItemDestination.arguments
         ) {
-            ItemScreen({}, it.arguments?.getInt(ItemDestination.itemIdArg))
+            val itemViewModel: ItemViewModel = viewModel(
+                factory = ItemViewModel.provideFactory(
+                    appContainer.galleryRepository,
+                    it.arguments?.getInt(ItemDestination.itemIdArg)
+                )
+            )
+            ItemScreen(itemViewModel)
         }
     }
 }

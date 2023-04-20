@@ -27,7 +27,7 @@ fun MetGalleryApp(appContainer: AppContainer) {
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = if (isItemScreen) ""
+                            text = if (isItemScreen) currentBackStack?.arguments?.getInt(ItemDestination.itemIdArg).toString()
                             else "Gallery"
                         )
                     },
@@ -39,7 +39,6 @@ fun MetGalleryApp(appContainer: AppContainer) {
                                     contentDescription = "Return"
                                 )
                             })
-                        } else {
                         }
                     })
             },
