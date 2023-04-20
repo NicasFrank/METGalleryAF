@@ -35,7 +35,7 @@ fun List<DatabaseItem>.itemListAsDomainModel(): List<Item> {
     }
 }
 
-fun DatabaseItem.itemAsDomainModel(): Item{
+fun DatabaseItem.itemAsDomainModel(): Item {
     return Item(
         objectID = objectID,
         primaryImage = primaryImage,
@@ -53,10 +53,10 @@ interface ItemDao {
     @Query("Select * From databaseitem WHERE objectId = :objectId")
     suspend fun getItemById(objectId: Int): DatabaseItem?
 
-    @Query("SELECT * FROM databaseitem WHERE title LIKE :query")
+    @Query("SELECT * FROM databaseitem WHERE title LIKE :query OR artistDisplayName LIKE :query OR objectDate LIKE :query")
     suspend fun getItems(query: String): List<DatabaseItem>
 
-    @Query("SELECT * FROM databaseitem WHERE title LIKE :query AND isHighlight")
+    @Query("SELECT * FROM databaseitem WHERE (title LIKE :query OR artistDisplayName LIKE :query OR objectDate LIKE :query) AND isHighlight")
     suspend fun getHighlights(query: String): List<DatabaseItem>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

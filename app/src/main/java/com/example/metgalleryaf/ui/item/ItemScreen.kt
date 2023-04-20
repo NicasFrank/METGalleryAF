@@ -2,6 +2,7 @@ package com.example.metgalleryaf.ui.item
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -52,15 +53,16 @@ fun ItemScreen(
                 Text(text = itemViewModel.item?.objectDate ?: "")
             }
         }
-        if(itemViewModel.item?.additionalImages?.isNotEmpty() == true){
+        if (itemViewModel.item?.additionalImages?.isNotEmpty() == true) {
             val images = itemViewModel.item?.additionalImages ?: listOf()
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp)
             ) {
-                items(images){ image ->
+                items(images) { image ->
                     SubcomposeAsyncImage(
                         model = image,
-                        contentDescription = "Additional Image"
+                        contentDescription = "Additional Image",
+                        modifier = Modifier.size(width = 128.dp, height = 128.dp)
                     ) {
                         when (painter.state) {
                             is AsyncImagePainter.State.Loading ->
