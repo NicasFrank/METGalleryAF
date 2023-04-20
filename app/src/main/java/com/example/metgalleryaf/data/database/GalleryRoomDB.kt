@@ -21,7 +21,7 @@ data class DatabaseItem constructor(
     val objectDate: String
 )
 
-fun List<DatabaseItem>.asDomainModel(): List<Item> {
+fun List<DatabaseItem>.itemListAsDomainModel(): List<Item> {
     return map {
         Item(
             objectID = it.objectID,
@@ -35,8 +35,24 @@ fun List<DatabaseItem>.asDomainModel(): List<Item> {
     }
 }
 
+fun DatabaseItem.itemAsDomainModel(): Item{
+    return Item(
+        objectID = objectID,
+        primaryImage = primaryImage,
+        primaryImageSmall = primaryImageSmall,
+        additionalImages = additionalImages,
+        title = title,
+        artistDisplayName = artistDisplayName,
+        objectDate = objectDate
+    )
+}
+
 @Dao
 interface ItemDao {
+
+    @Query("Select * From databaseitem WHERE objectId = :objectId")
+    suspend fun getItemById(objectId: Int): DatabaseItem?
+
     @Query("SELECT * FROM databaseitem WHERE title LIKE :query")
     suspend fun getItems(query: String): List<DatabaseItem>
 
