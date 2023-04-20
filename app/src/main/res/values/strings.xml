@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">METGalleryAF</string>
+    <string name="preview_img">preview image</string>
+    <string name="image_error">no image available</string>
+    <string name="highlights_only">display highlights only</string>
+    <string name="search_text">Search</string>
+    <string name="additional_image">additional image</string>
+    <string name="main_image">main image</string>
 </resources>

@@ -14,12 +14,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.metgalleryaf.R
 import com.example.metgalleryaf.model.Item
 
 @Composable
@@ -45,7 +47,7 @@ fun GalleryScreen(
                 if (uiState.isLoading)
                     CircularProgressIndicator()
                 else
-                    Text(text = "Search")
+                    Text(text = stringResource(id = R.string.search_text))
 
             },
             enabled = !uiState.isLoading
@@ -69,7 +71,7 @@ fun SearchSettings(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(checked = searchParameters.onlyHighlights, onCheckedChange = onHighlightCheck)
-            Text(text = "Display only Highlights")
+            Text(text = stringResource(id = R.string.highlights_only))
         }
     }
 }
@@ -140,7 +142,7 @@ fun ItemElement(
             ) {
                 SubcomposeAsyncImage(
                     model = previewImg,
-                    contentDescription = "Preview Image",
+                    contentDescription = stringResource(id = R.string.preview_img),
                     modifier = Modifier.size(width = 100.dp, height = 100.dp)
                 ) {
                     when (painter.state) {
@@ -149,12 +151,12 @@ fun ItemElement(
                         is AsyncImagePainter.State.Error ->
                             Icon(
                                 imageVector = Icons.Default.Warning,
-                                contentDescription = "No Image Available"
+                                contentDescription = stringResource(id = R.string.image_error)
                             )
                         is AsyncImagePainter.State.Empty ->
                             Icon(
                                 imageVector = Icons.Default.Warning,
-                                contentDescription = "No Image Available"
+                                contentDescription = stringResource(id = R.string.image_error)
                             )
                         is AsyncImagePainter.State.Success ->
                             SubcomposeAsyncImageContent()

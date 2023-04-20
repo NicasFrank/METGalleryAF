@@ -88,7 +88,7 @@ fun getDatabase(context: Context): GalleryRoomDB {
 @OptIn(ExperimentalStdlibApi::class)
 class Converters {
     private val moshi: Moshi = Moshi.Builder().build()
-    private val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter<List<String>>()
+    private val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter()
 
     @TypeConverter
     fun stringListToJson(list: List<String>): String {

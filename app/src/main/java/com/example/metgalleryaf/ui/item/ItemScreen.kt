@@ -13,10 +13,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.metgalleryaf.R
 
 
 @Composable
@@ -24,10 +26,11 @@ fun ItemScreen(
     itemViewModel: ItemViewModel
 ) {
     Column() {
+        val item = itemViewModel.item
         Row() {
             SubcomposeAsyncImage(
-                model = itemViewModel.item?.primaryImage,
-                contentDescription = "Image",
+                model = item?.primaryImage,
+                contentDescription = stringResource(id = R.string.main_image),
                 modifier = Modifier.weight(1f)
             ) {
                 when (painter.state) {
@@ -36,32 +39,32 @@ fun ItemScreen(
                     is AsyncImagePainter.State.Error ->
                         Icon(
                             imageVector = Icons.Default.Warning,
-                            contentDescription = "No Image Available"
+                            contentDescription = stringResource(id = R.string.image_error)
                         )
                     is AsyncImagePainter.State.Empty ->
                         Icon(
                             imageVector = Icons.Default.Warning,
-                            contentDescription = "No Image Available"
+                            contentDescription = stringResource(id = R.string.image_error)
                         )
                     is AsyncImagePainter.State.Success ->
                         SubcomposeAsyncImageContent()
                 }
             }
             Column(modifier = Modifier.weight(2f)) {
-                Text(text = itemViewModel.item?.title ?: "")
-                Text(text = itemViewModel.item?.artistDisplayName ?: "")
-                Text(text = itemViewModel.item?.objectDate ?: "")
+                Text(text = item?.title ?: "")
+                Text(text = item?.artistDisplayName ?: "")
+                Text(text = item?.objectDate ?: "")
             }
         }
-        if (itemViewModel.item?.additionalImages?.isNotEmpty() == true) {
-            val images = itemViewModel.item?.additionalImages ?: listOf()
+        if (item?.additionalImages?.isNotEmpty() == true) {
+            val images = item.additionalImages
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp)
             ) {
                 items(images) { image ->
                     SubcomposeAsyncImage(
                         model = image,
-                        contentDescription = "Additional Image",
+                        contentDescription = stringResource(id = R.string.additional_image),
                         modifier = Modifier.size(width = 128.dp, height = 128.dp)
                     ) {
                         when (painter.state) {
@@ -70,12 +73,12 @@ fun ItemScreen(
                             is AsyncImagePainter.State.Error ->
                                 Icon(
                                     imageVector = Icons.Default.Warning,
-                                    contentDescription = "No Image Available"
+                                    contentDescription = stringResource(id = R.string.image_error)
                                 )
                             is AsyncImagePainter.State.Empty ->
                                 Icon(
                                     imageVector = Icons.Default.Warning,
-                                    contentDescription = "No Image Available"
+                                    contentDescription = stringResource(id = R.string.image_error)
                                 )
                             is AsyncImagePainter.State.Success ->
                                 SubcomposeAsyncImageContent()
