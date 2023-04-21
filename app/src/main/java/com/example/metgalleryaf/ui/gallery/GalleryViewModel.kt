@@ -45,7 +45,7 @@ class GalleryViewModel @Inject constructor(
         .map(GalleryViewModelState::toUiState)
         .stateIn(
             viewModelScope,
-            SharingStarted.Eagerly,
+            SharingStarted.WhileSubscribed(),
             viewModelState.value.toUiState()
         )
 
