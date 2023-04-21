@@ -4,19 +4,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.metgalleryaf.data.GalleryRepository
 import com.example.metgalleryaf.model.Item
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ItemViewModel(
-    private val itemId: Int?
+@HiltViewModel
+class ItemViewModel @Inject constructor(
+    private val galleryRepository: GalleryRepository
 ) : ViewModel() {
 
-    @Inject
-    lateinit var galleryRepository: GalleryRepository
+
+    private val itemId: Int? = 2342
 
     private val initialItem: Item? = null
     var item by mutableStateOf(initialItem)
@@ -30,18 +31,19 @@ class ItemViewModel(
         }
     }
 
-    companion object {
+    /*companion object {
         fun provideFactory(
+            galleryRepository: GalleryRepository,
             itemId: Int?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return ItemViewModel(itemId) as T
+                    return ItemViewModel(galleryRepository, itemId) as T
                 }
                 throw IllegalArgumentException("Unable to construct ViewModel")
             }
         }
-    }
+    }*/
 
 }

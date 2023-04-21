@@ -35,9 +35,9 @@ private data class GalleryViewModelState(
 }
 
 @HiltViewModel
-class GalleryViewModel @Inject constructor() : ViewModel() {
-
-    @Inject lateinit var galleryRepository: GalleryRepository
+class GalleryViewModel @Inject constructor(
+    private val galleryRepository: GalleryRepository
+) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(GalleryViewModelState())
 
