@@ -52,10 +52,10 @@ class GalleryViewModelTest {
 
     private val testItemList = listOf(testItem)
 
+    private lateinit var galleryViewModel: GalleryViewModel
+
     @Mock
     private lateinit var galleryRepository: GalleryRepository
-
-    private lateinit var galleryViewModel: GalleryViewModel
 
     @Before
     fun setUp(){

@@ -4,6 +4,7 @@ import com.example.metgalleryaf.data.database.GalleryRoomDB
 import com.example.metgalleryaf.data.database.itemAsDomainModel
 import com.example.metgalleryaf.data.database.itemListAsDomainModel
 import com.example.metgalleryaf.data.network.MetNetwork
+import com.example.metgalleryaf.data.network.asDatabaseModel
 import com.example.metgalleryaf.model.Item
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class GalleryRepository @Inject constructor(private val database: GalleryRoomDB)
         if (result.isSuccess) {
             val foundItems = result.getOrNull()!!
             for (item in foundItems) {
-                database.itemDao.insertItem(item)
+                database.itemDao.insertItem(item.asDatabaseModel())
             }
         }
         return if (onlyHighlights) database.itemDao.getHighlights("%$query%").itemListAsDomainModel()
