@@ -4,20 +4,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.metgalleryaf.data.GalleryRepository
 import com.example.metgalleryaf.model.Item
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class ItemViewModel @Inject constructor(
-    private val galleryRepository: GalleryRepository
+class ItemViewModel @AssistedInject constructor(
+    private val galleryRepository: GalleryRepository,
+    @Assisted private val itemId: Int?
 ) : ViewModel() {
-
-
-    private val itemId: Int? = 2342
 
     private val initialItem: Item? = null
     var item by mutableStateOf(initialItem)
@@ -31,19 +29,24 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    /*companion object {
+    @AssistedFactory
+    interface ItemViewModelFactory{
+        fun create(itemId: Int?): ItemViewModel
+    }
+
+    companion object {
         fun provideFactory(
-            galleryRepository: GalleryRepository,
+            assistedFactory: ItemViewModelFactory,
             itemId: Int?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return ItemViewModel(galleryRepository, itemId) as T
+                    return assistedFactory.create(itemId) as T
                 }
                 throw IllegalArgumentException("Unable to construct ViewModel")
             }
         }
-    }*/
+    }
 
 }

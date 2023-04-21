@@ -1,18 +1,23 @@
 package com.example.metgalleryaf.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.metgalleryaf.ui.MainActivity
 import com.example.metgalleryaf.ui.gallery.GalleryScreen
 import com.example.metgalleryaf.ui.gallery.GalleryViewModel
 import com.example.metgalleryaf.ui.item.ItemScreen
 import com.example.metgalleryaf.ui.item.ItemViewModel
+import dagger.hilt.android.EntryPointAccessors
 
 interface MetGalleryDestinations {
     val route: String
@@ -48,7 +53,11 @@ fun MetGalleryNavHost(
             route = ItemDestination.routeWithArgs,
             arguments = ItemDestination.arguments
         ) {
-            val itemViewModel = hiltViewModel<ItemViewModel>()
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                MainActivity.ViewModelFactoryProvider::class.java
+            ).itemViewModelFactory()
+            val itemViewModel: ItemViewModel = viewModel(factory = ItemViewModel.provideFactory(factory,it.arguments?.getInt("itemId")))
             ItemScreen(itemViewModel)
         }
     }
