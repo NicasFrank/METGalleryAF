@@ -1,7 +1,6 @@
 package com.example.metgalleryaf.data.network
 
 import android.accounts.NetworkErrorException
-import com.example.metgalleryaf.data.database.DatabaseItem
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -31,19 +30,19 @@ object MetNetwork {
 
     private val metGallery: MetService = retrofit.create(MetService::class.java)
 
-    suspend fun fetchItems(query: String, onlyHighlights: Boolean): Result<List<DatabaseItem>> {
+    suspend fun fetchItems(query: String, onlyHighlights: Boolean): Result<List<NetworkItem>> {
         try {
             val itemIds =
                 if (onlyHighlights)
                     metGallery.searchForHighlight(query)
                 else
                     metGallery.searchForItem(query)
-            val items = mutableListOf<DatabaseItem>()
+            val items = mutableListOf<NetworkItem>()
             var idTest: Int
             for (id in itemIds.objectIDs) {
                 idTest = id
                 try {
-                    items.add(metGallery.getItem(id).asDatabaseModel())
+                    items.add(metGallery.getItem(id))
                 } catch (e: HttpException) {
                     println(idTest)
                     continue

@@ -1,7 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id("com.google.devtools.ksp") version "1.8.0-1.0.9"
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+    id 'kotlin-kapt'
 }
 
 android {
@@ -15,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.example.metgalleryaf.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -52,11 +54,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.0'
-    implementation "androidx.compose.ui:ui:1.4.1"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.4.1"
+    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation "androidx.compose.ui:ui:1.4.2"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.4.2"
     implementation "androidx.navigation:navigation-compose:2.5.3"
-    implementation 'androidx.compose.material3:material3:1.1.0-beta02'
+    implementation 'androidx.compose.material3:material3:1.1.0-rc01'
 
 
     //Room
@@ -69,6 +71,13 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.45")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    kapt 'com.google.dagger:hilt-compiler:2.45'
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+
     //Moshi
     implementation "com.squareup.moshi:moshi:1.14.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.14.0"
@@ -78,9 +87,19 @@ dependencies {
     implementation "io.coil-kt:coil-compose:2.3.0"
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestImplementation "androidx.test:rules:1.5.0"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.4.1"
-    debugImplementation "androidx.compose.ui:ui-tooling:1.4.1"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:1.4.1"
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+    androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.4.2"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.4.2"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.4.2"
+
+    //Mockito
+    testImplementation "org.mockito:mockito-core:4.5.1"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
+    testImplementation 'org.mockito:mockito-inline:3.5.15'
 }

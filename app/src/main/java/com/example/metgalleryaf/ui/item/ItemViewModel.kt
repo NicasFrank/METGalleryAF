@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.metgalleryaf.data.GalleryRepository
 import com.example.metgalleryaf.model.Item
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-
-class ItemViewModel(
+class ItemViewModel @AssistedInject constructor(
     private val galleryRepository: GalleryRepository,
-    private val itemId: Int?
+    @Assisted private val itemId: Int?
 ) : ViewModel() {
 
     private val initialItem: Item? = null
@@ -27,15 +29,20 @@ class ItemViewModel(
         }
     }
 
+    @AssistedFactory
+    interface ItemViewModelFactory{
+        fun create(itemId: Int?): ItemViewModel
+    }
+
     companion object {
         fun provideFactory(
-            galleryRepository: GalleryRepository,
+            assistedFactory: ItemViewModelFactory,
             itemId: Int?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    return ItemViewModel(galleryRepository, itemId) as T
+                    return assistedFactory.create(itemId) as T
                 }
                 throw IllegalArgumentException("Unable to construct ViewModel")
             }
