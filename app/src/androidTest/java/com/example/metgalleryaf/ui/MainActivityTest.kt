@@ -2,6 +2,7 @@ package com.example.metgalleryaf.ui
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
@@ -12,6 +13,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import com.example.metgalleryaf.navigation.ItemDestination
 
 @HiltAndroidTest
 class MainActivityTest{
@@ -37,9 +39,19 @@ class MainActivityTest{
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun verifyStartDestination(){
+    fun verifyStartDestination() {
+        composeTestRule.onRoot()
+            .assertIsDisplayed()
         assertEquals(GalleryDestination.route, navController.currentBackStackEntry?.destination?.route)
+        composeTestRule.onNodeWithTag("searchbar")
+            .performTextInput("Da Vinci")
+        composeTestRule.onNodeWithTag("searchbutton")
+            .performClick()
+        composeTestRule.waitUntilAtLeastOneExists (hasTestTag("itemcard"), 500000)
+        composeTestRule.onAllNodesWithTag("itemcard")[0].performClick()
+        assertEquals(ItemDestination.routeWithArgs, navController.currentBackStackEntry?.destination?.route)
     }
 
 }

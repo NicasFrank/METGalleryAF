@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,7 +44,8 @@ fun GalleryScreen(
             onClick = { galleryViewModel.searchForItems() },
             modifier = Modifier
                 .widthIn(min = 80.dp)
-                .heightIn(min = 40.dp),
+                .heightIn(min = 40.dp)
+                .semantics { testTag = "searchbutton" },
             content = {
                 if (uiState.isLoading)
                     CircularProgressIndicator()
@@ -100,6 +103,7 @@ fun SearchBar(
             .padding(start = 10.dp, top = 5.dp, end = 10.dp)
             .heightIn(min = 56.dp)
             .clip(CircleShape)
+            .semantics { testTag = "searchbar" }
     )
 }
 
@@ -134,7 +138,8 @@ fun ItemElement(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClickItem(itemId) },
+            .clickable { onClickItem(itemId) }
+            .semantics { testTag = "itemcard" },
         content = {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
