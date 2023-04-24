@@ -63,24 +63,20 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun onSearchInputChanged(query: String) {
-        val newParameters = uiState.value.searchParameters.let {
-            SearchParameters(
-                query,
-                it.onlyHighlights
-            )
-        }
+        val newParameters = SearchParameters(
+            query,
+            uiState.value.searchParameters.onlyHighlights
+        )
         viewModelState.update {
             it.copy(searchParameters = newParameters)
         }
     }
 
     fun onHighlightCheck() {
-        val newParameters = uiState.value.searchParameters.let {
-            SearchParameters(
-                it.query,
-                it.onlyHighlights.not()
-            )
-        }
+        val newParameters = SearchParameters(
+            uiState.value.searchParameters.query,
+            uiState.value.searchParameters.onlyHighlights.not()
+        )
         viewModelState.update {
             it.copy(searchParameters = newParameters)
         }

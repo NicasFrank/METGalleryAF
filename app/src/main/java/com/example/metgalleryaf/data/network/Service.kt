@@ -1,12 +1,16 @@
 package com.example.metgalleryaf.data.network
 
 import android.accounts.NetworkErrorException
+import kotlinx.coroutines.*
+import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 interface MetService {
@@ -23,8 +27,15 @@ interface MetService {
 
 object MetNetwork {
 
+    private val okHTTPClient: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(1, TimeUnit.MINUTES)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .build()
+
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://collectionapi.metmuseum.org/public/collection/v1/")
+        .client(okHTTPClient)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
@@ -38,15 +49,16 @@ object MetNetwork {
                 else
                     metGallery.searchForItem(query)
             val items = mutableListOf<NetworkItem>()
-            var idTest: Int
-            for (id in itemIds.objectIDs) {
-                idTest = id
-                try {
-                    items.add(metGallery.getItem(id))
-                } catch (e: HttpException) {
-                    println(idTest)
-                    continue
-                }
+            coroutineScope {
+                itemIds.objectIDs.map {
+                    async {
+                        try {
+                            items.add(metGallery.getItem(it))
+                        } catch (e: HttpException) {
+                            Timber.w("Item $it not found")
+                        }
+                    }
+                }.awaitAll()
             }
             return if (items.isEmpty()) {
                 Result.failure(IllegalArgumentException("No items found"))
