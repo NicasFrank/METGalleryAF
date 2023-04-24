@@ -2,6 +2,7 @@ package com.example.metgalleryaf.data
 
 import android.content.Context
 import com.example.metgalleryaf.data.database.GalleryRoomDB
+import com.example.metgalleryaf.data.database.ItemDao
 import com.example.metgalleryaf.data.database.getDatabase
 import dagger.Module
 import dagger.Provides
@@ -17,5 +18,11 @@ class AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): GalleryRoomDB{
         return getDatabase(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideItemDao(database: GalleryRoomDB): ItemDao{
+        return database.itemDao
     }
 }

@@ -1,6 +1,6 @@
 package com.example.metgalleryaf.data
 
-import com.example.metgalleryaf.data.database.GalleryRoomDB
+import com.example.metgalleryaf.data.database.ItemDao
 import com.example.metgalleryaf.data.database.itemAsDomainModel
 import com.example.metgalleryaf.data.database.itemListAsDomainModel
 import com.example.metgalleryaf.data.network.MetNetwork
@@ -9,7 +9,7 @@ import com.example.metgalleryaf.model.Item
 import javax.inject.Inject
 
 class GalleryRepository @Inject constructor(
-    private val database: GalleryRoomDB,
+    private val itemDao: ItemDao,
     private val network: MetNetwork
     ) {
 
@@ -18,15 +18,15 @@ class GalleryRepository @Inject constructor(
         if (result.isSuccess) {
             val foundItems = result.getOrNull()!!
             for (item in foundItems) {
-                database.itemDao.insertItem(item.asDatabaseModel())
+                itemDao.insertItem(item.asDatabaseModel())
             }
         }
-        return if (onlyHighlights) database.itemDao.getHighlights("%$query%").itemListAsDomainModel()
-        else database.itemDao.getItems("%$query%").itemListAsDomainModel()
+        return if (onlyHighlights) itemDao.getHighlights("%$query%").itemListAsDomainModel()
+        else itemDao.getItems("%$query%").itemListAsDomainModel()
     }
 
     suspend fun fetchItemById(itemId: Int): Item? {
-        return database.itemDao.getItemById(itemId)?.itemAsDomainModel()
+        return itemDao.getItemById(itemId)?.itemAsDomainModel()
     }
 
 }
