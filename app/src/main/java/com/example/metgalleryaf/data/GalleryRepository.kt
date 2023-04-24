@@ -8,10 +8,13 @@ import com.example.metgalleryaf.data.network.asDatabaseModel
 import com.example.metgalleryaf.model.Item
 import javax.inject.Inject
 
-class GalleryRepository @Inject constructor(private val database: GalleryRoomDB) {
+class GalleryRepository @Inject constructor(
+    private val database: GalleryRoomDB,
+    private val network: MetNetwork
+    ) {
 
     suspend fun fetchItems(query: String, onlyHighlights: Boolean): List<Item> {
-        val result = MetNetwork.fetchItems(query, onlyHighlights)
+        val result = network.fetchItems(query, onlyHighlights)
         if (result.isSuccess) {
             val foundItems = result.getOrNull()!!
             for (item in foundItems) {

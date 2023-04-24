@@ -11,21 +11,24 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 interface MetService {
 
-    @GET("search?")
+    @GET("search")
     suspend fun searchForItem(@Query("q") query: String): ItemIdList
 
-    @GET("search?isHighlight=true&")
-    suspend fun searchForHighlight(@Query("q") query: String): ItemIdList
+    @GET("search")
+    suspend fun searchForHighlight(@Query("q") query: String, @Query("isHighlight") isHighlight: String = "true"): ItemIdList
 
     @GET("objects/{id}")
     suspend fun getItem(@Path("id") id: Int): NetworkItem
 }
 
-object MetNetwork {
+@Singleton
+class MetNetwork @Inject constructor() {
 
     private val okHTTPClient: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
