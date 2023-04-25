@@ -2,7 +2,6 @@ package com.example.metgalleryaf.data.database
 
 import android.content.Context
 import androidx.room.*
-import com.example.metgalleryaf.model.Item
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
@@ -21,31 +20,6 @@ data class DatabaseItem constructor(
     val objectDate: String
 )
 
-fun List<DatabaseItem>.itemListAsDomainModel(): List<Item> {
-    return map {
-        Item(
-            objectID = it.objectID,
-            primaryImage = it.primaryImage,
-            primaryImageSmall = it.primaryImageSmall,
-            additionalImages = it.additionalImages,
-            title = it.title,
-            artistDisplayName = it.artistDisplayName,
-            objectDate = it.objectDate
-        )
-    }
-}
-
-fun DatabaseItem.itemAsDomainModel(): Item {
-    return Item(
-        objectID = objectID,
-        primaryImage = primaryImage,
-        primaryImageSmall = primaryImageSmall,
-        additionalImages = additionalImages,
-        title = title,
-        artistDisplayName = artistDisplayName,
-        objectDate = objectDate
-    )
-}
 
 @Dao
 interface ItemDao {

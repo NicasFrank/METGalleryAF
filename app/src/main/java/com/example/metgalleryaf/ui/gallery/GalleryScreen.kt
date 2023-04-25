@@ -112,7 +112,7 @@ fun ItemGallery(
     itemList: List<Item> = listOf(),
     onClickItem: (Int) -> Unit
 ) {
-    LazyColumn(
+    if(itemList.isNotEmpty())LazyColumn(
         contentPadding = PaddingValues(horizontal = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(top = 16.dp)
@@ -125,7 +125,7 @@ fun ItemGallery(
                 onClickItem = onClickItem
             )
         }
-    }
+    }else Text(text = stringResource(id = R.string.no_items_found))
 }
 
 @Composable

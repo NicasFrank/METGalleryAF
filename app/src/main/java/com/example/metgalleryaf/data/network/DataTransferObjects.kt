@@ -1,6 +1,5 @@
 package com.example.metgalleryaf.data.network
 
-import com.example.metgalleryaf.data.database.DatabaseItem
 import com.squareup.moshi.JsonClass
 
 
@@ -19,16 +18,3 @@ data class ItemIdList(
     val artistDisplayName: String,
     val objectDate: String
 )
-
-fun NetworkItem.asDatabaseModel(): DatabaseItem{
-    return DatabaseItem(
-        objectID = objectID,
-        isHighlight = isHighlight,
-        primaryImage = primaryImage,
-        primaryImageSmall = primaryImageSmall,
-        additionalImages = additionalImages,
-        title = title,
-        artistDisplayName = artistDisplayName,
-        objectDate = objectDate
-    )
-}

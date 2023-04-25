@@ -8,4 +8,5 @@
     <string name="main_image">main image</string>
     <string name="gallery_headline">Gallery</string>
     <string name="navigate_back">return</string>
+    <string name="no_items_found">No items found :(</string>
 </resources>
