@@ -42,6 +42,7 @@ class GalleryViewModelTest {
 
     private val testItem = Item(
         objectID = 1,
+        isHighlight = false,
         title = "",
         objectDate = "",
         artistDisplayName = "",
